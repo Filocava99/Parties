@@ -20,10 +20,11 @@ public final class FWParties extends JavaPlugin {
 
     @Override
     public void onEnable() {
-       loadData();
-       registerListeners();
-       registerCommands();
-       registerTasks();
+        INSTANCE = this;
+        loadData();
+        registerListeners();
+        registerCommands();
+        registerTasks();
     }
 
     @Override
@@ -31,7 +32,7 @@ public final class FWParties extends JavaPlugin {
         saveParties();
     }
 
-    public static FWParties getInstance(){
+    public static FWParties getInstance() {
         return INSTANCE;
     }
 
@@ -39,29 +40,29 @@ public final class FWParties extends JavaPlugin {
         return partyController;
     }
 
-    public Config getPluginConfig(){
+    public Config getPluginConfig() {
         return config;
     }
 
-    public void saveParties(){
+    public void saveParties() {
         storageController.saveParties(partyController);
     }
 
-    private void loadData(){
+    private void loadData() {
         storageController = new StorageController();
         config = storageController.loadConfig();
         partyController = storageController.loadParties();
     }
 
-    private void registerListeners(){
+    private void registerListeners() {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
-    private void registerCommands(){
+    private void registerCommands() {
         Objects.requireNonNull(getCommand("party")).setExecutor(new PartyCommand());
     }
 
-    private void registerTasks(){
+    private void registerTasks() {
         new PartySerializationTask();
     }
 }

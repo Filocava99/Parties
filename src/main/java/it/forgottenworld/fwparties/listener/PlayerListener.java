@@ -26,34 +26,36 @@ public class PlayerListener implements Listener {
     public void onEntityDamaged(EntityDamageByEntityEvent event) {
         Entity damagerEntity = event.getDamager();
         Entity damagedEntity = event.getEntity();
-        if(damagedEntity instanceof Player){
+        if (damagedEntity instanceof Player) {
             Player damager;
-            if(damagerEntity instanceof Projectile) {
+            if (damagerEntity instanceof Projectile) {
                 ProjectileSource projectileSource = ((Projectile) damagerEntity).getShooter();
                 if (projectileSource instanceof Player) {
                     damager = (Player) projectileSource;
-                } else if (damagerEntity instanceof Player) {
-                    damager = (Player) damagerEntity;
                 } else {
                     return;
                 }
-                Player target = (Player) damagedEntity;
-                if(plugin.getPartyController().areInSameParty(damager, target)){
-                    event.setCancelled(true);
-                }
+            } else if (damagerEntity instanceof Player) {
+                damager = (Player) damagerEntity;
+            } else {
+                return;
+            }
+            Player target = (Player) damagedEntity;
+            if (plugin.getPartyController().areInSameParty(damager, target)) {
+                event.setCancelled(true);
             }
         }
     }
 
     @EventHandler
-    public void onPotionSplash(PotionSplashEvent event){
-        if(event.getEntity().getEffects().stream().map(PotionEffect::getType).anyMatch(potionEffect -> potionEffect == PotionEffectType.BLINDNESS || potionEffect == PotionEffectType.HARM || potionEffect == PotionEffectType.POISON || potionEffect == PotionEffectType.SLOW)){
-            if(event.getEntity().getShooter() instanceof Player){
-                Player shooter = (Player)event.getEntity().getShooter();
+    public void onPotionSplash(PotionSplashEvent event) {
+        if (event.getEntity().getEffects().stream().map(PotionEffect::getType).anyMatch(potionEffect -> potionEffect == PotionEffectType.BLINDNESS || potionEffect == PotionEffectType.HARM || potionEffect == PotionEffectType.POISON || potionEffect == PotionEffectType.SLOW)) {
+            if (event.getEntity().getShooter() instanceof Player) {
+                Player shooter = (Player) event.getEntity().getShooter();
                 event.getAffectedEntities().forEach(livingEntity -> {
-                    if(livingEntity instanceof Player){
+                    if (livingEntity instanceof Player) {
                         Player damaged = (Player) livingEntity;
-                        if(plugin.getPartyController().areInSameParty(shooter, damaged)){
+                        if (plugin.getPartyController().areInSameParty(shooter, damaged)) {
                             event.setIntensity(livingEntity, 0);
                         }
                     }
@@ -69,7 +71,7 @@ public class PlayerListener implements Listener {
         PartyController partyController = plugin.getPartyController();
         if (partyController.isPlayerChatting(player.getUniqueId())) {
             event.setCancelled(true);
-            partyController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(),"&2[PARTY] &a" + player.getName() + ": " + message);
+            partyController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
         }
     }
 }
