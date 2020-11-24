@@ -1,0 +1,14 @@
+name: FWParties
+version: @version@
+main: it.forgottenworld.fwparties.FWParties
+api-version: 1.16
+authors: [ tigierrei ]
+commands:
+  party:
+    description: Party command
+    aliases:
+      - p
+      - fwparty
+      - fwparties
+    permission: party.*
+    default: true
