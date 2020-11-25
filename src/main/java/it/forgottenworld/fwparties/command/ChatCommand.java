@@ -18,21 +18,21 @@ public class ChatCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             PartyController partyController = FWParties.getInstance().getPartyController();
-            if (args.length > 0) {
-                if (partyController.isPlayerInParty(player.getUniqueId())) {
+            if (partyController.isPlayerInParty(player.getUniqueId())) {
+                if (args.length > 0) {
                     String message = String.join(" ", Arrays.asList(Arrays.copyOfRange(args, 0, args.length)));
                     partyController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
                 } else {
-                    player.sendMessage(TextUtility.parseColors(FWParties.getInstance().getPluginConfig().getConfig().getString("not_on_party")));
+                    if (partyController.isPlayerChatting(player.getUniqueId())) {
+                        player.sendMessage(TextUtility.parseColors("&eParty chat disabilitata!"));
+                        partyController.removeChattingPlayer(player.getUniqueId());
+                    } else {
+                        player.sendMessage(TextUtility.parseColors("&eParty chat abilitata!"));
+                        partyController.addChattingPlayer(player.getUniqueId());
+                    }
                 }
             } else {
-                if (partyController.isPlayerChatting(player.getUniqueId())) {
-                    player.sendMessage(TextUtility.parseColors("&eParty chat disabilitata!"));
-                    partyController.removeChattingPlayer(player.getUniqueId());
-                } else {
-                    player.sendMessage(TextUtility.parseColors("&eParty chat abilitata!"));
-                    partyController.addChattingPlayer(player.getUniqueId());
-                }
+                player.sendMessage(TextUtility.parseColors(FWParties.getInstance().getPluginConfig().getConfig().getString("not_on_party")));
             }
         } else {
             sender.sendMessage("Only players can run that command");
