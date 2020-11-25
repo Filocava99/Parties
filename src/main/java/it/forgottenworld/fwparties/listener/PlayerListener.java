@@ -87,9 +87,11 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         String message = event.getMessage();
         PartyController partyController = plugin.getPartyController();
-        if (partyController.isPlayerChatting(player.getUniqueId())) {
-            event.setCancelled(true);
-            partyController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
+        if(partyController.isPlayerInParty(player.getUniqueId())){
+            if (partyController.isPlayerChatting(player.getUniqueId())) {
+                event.setCancelled(true);
+                partyController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
+            }
         }
     }
 }
