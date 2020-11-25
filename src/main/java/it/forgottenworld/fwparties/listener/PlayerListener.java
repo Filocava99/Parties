@@ -3,6 +3,7 @@ package it.forgottenworld.fwparties.listener;
 import it.forgottenworld.fwparties.FWParties;
 import it.forgottenworld.fwparties.controller.PartyController;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -13,6 +14,10 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Objects;
 
 public class PlayerListener implements Listener {
 
@@ -41,6 +46,9 @@ public class PlayerListener implements Listener {
                 return;
             }
             Player target = (Player) damagedEntity;
+            if(FWParties.getInstance().getPluginConfig().getConfig().getStringList("always_on_friendly_fire_worlds").contains(Objects.requireNonNull(target.getLocation().getWorld()).getName())){
+                return;
+            }
             if (plugin.getPartyController().areInSameParty(damager, target)) {
                 event.setCancelled(true);
             }
@@ -52,14 +60,24 @@ public class PlayerListener implements Listener {
         if (event.getEntity().getEffects().stream().map(PotionEffect::getType).anyMatch(potionEffect -> potionEffect == PotionEffectType.BLINDNESS || potionEffect == PotionEffectType.HARM || potionEffect == PotionEffectType.POISON || potionEffect == PotionEffectType.SLOW)) {
             if (event.getEntity().getShooter() instanceof Player) {
                 Player shooter = (Player) event.getEntity().getShooter();
+                Collection<LivingEntity> affectedEntities = event.getAffectedEntities();
                 event.getAffectedEntities().forEach(livingEntity -> {
                     if (livingEntity instanceof Player) {
                         Player damaged = (Player) livingEntity;
+                        if(FWParties.getInstance().getPluginConfig().getConfig().getStringList("always_on_friendly_fire_worlds").contains(Objects.requireNonNull(damaged.getLocation().getWorld()).getName())){
+                            return;
+                        }
                         if (plugin.getPartyController().areInSameParty(shooter, damaged)) {
-                            event.setIntensity(livingEntity, 0);
+                            affectedEntities.remove(livingEntity);
                         }
                     }
                 });
+                try {
+                    Field affectedEntitiesField = event.getClass().getDeclaredField("affectedEntities");
+                    affectedEntitiesField.setAccessible(true);
+                    affectedEntitiesField.set(event, affectedEntities);
+                } catch (Exception ignored) {
+                }
             }
         }
     }

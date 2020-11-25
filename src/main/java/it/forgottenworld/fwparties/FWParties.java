@@ -1,6 +1,8 @@
 package it.forgottenworld.fwparties;
 
+import it.forgottenworld.fwparties.command.ChatCommand;
 import it.forgottenworld.fwparties.command.PartyCommand;
+import it.forgottenworld.fwparties.command.PositionCommand;
 import it.forgottenworld.fwparties.config.Config;
 import it.forgottenworld.fwparties.controller.PartyController;
 import it.forgottenworld.fwparties.controller.StorageController;
@@ -60,6 +62,8 @@ public final class FWParties extends JavaPlugin {
 
     private void registerCommands() {
         Objects.requireNonNull(getCommand("party")).setExecutor(new PartyCommand());
+        Objects.requireNonNull(getCommand("pc")).setExecutor(new ChatCommand());
+        Objects.requireNonNull(getCommand("pos")).setExecutor(new PositionCommand());
     }
 
     private void registerTasks() {

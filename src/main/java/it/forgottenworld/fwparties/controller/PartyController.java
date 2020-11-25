@@ -26,11 +26,6 @@ public class PartyController implements Serializable {
         return inviteMap.containsKey(player);
     }
 
-    /**
-     *
-     * @param playerInvited
-     * @return Party leader
-     */
     public UUID removeInvite(UUID playerInvited){
         return inviteMap.remove(playerInvited);
     }
@@ -113,8 +108,11 @@ public class PartyController implements Serializable {
 
     public void sendMessageToPartyMembers(UUID partyLeader, String message){
         if(partyMap.containsKey(partyLeader)){
-            for(UUID player : partyMap.get(partyLeader).getPlayerList()){
-                Bukkit.getServer().getPlayer(player).sendMessage(ChatColor.translateAlternateColorCodes('&',message));
+            for(UUID uuid : partyMap.get(partyLeader).getPlayerList()){
+                Player player = Bukkit.getPlayer(uuid);
+                if(player != null){
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',message));
+                }
             }
         }
     }
@@ -128,27 +126,14 @@ public class PartyController implements Serializable {
         return false;
     }
 
-    /**
-     * Adding a player UUID to a list of players who have activated party chat.
-     * @param player
-     */
     public void addChattingPlayer(UUID player) {
         isPlayerChat.replace(player, true);
     }
 
-    /**
-     * Removing a player UUID to a list of players who have activated party chat.
-     * @param player
-     */
     public void removeChattingPlayer(UUID player) {
         isPlayerChat.replace(player, false);
     }
 
-    /**
-     * If the player UUID has activated the party chat.
-     * @param player
-     * @return Boolean
-     */
     public Boolean isPlayerChatting(UUID player) {
         return isPlayerChat.get(player);
     }

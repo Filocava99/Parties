@@ -8,6 +8,7 @@ import it.forgottenworld.fwparties.util.TextUtility;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,25 +38,25 @@ public class PartyCommand implements CommandExecutor {
             create(sender, args);
         } else if (args[0].equalsIgnoreCase("disband")) {
             disband(sender, args);
-        }else if(args[0].equalsIgnoreCase("setPassword")){
+        } else if (args[0].equalsIgnoreCase("setPassword")) {
             setPassword(sender, args);
-        }else if(args[0].equalsIgnoreCase("join")){
+        } else if (args[0].equalsIgnoreCase("join")) {
             join(sender, args);
-        }else if(args[0].equalsIgnoreCase("invite")){
+        } else if (args[0].equalsIgnoreCase("invite")) {
             invite(sender, args);
-        }else if(args[0].equalsIgnoreCase("accept")){
+        } else if (args[0].equalsIgnoreCase("accept")) {
             accept(sender);
-        }else if(args[0].equalsIgnoreCase("decline")){
+        } else if (args[0].equalsIgnoreCase("decline")) {
             decline(sender, args);
-        }else if(args[0].equalsIgnoreCase("leave")){
+        } else if (args[0].equalsIgnoreCase("leave")) {
             leave(sender, args);
-        }else if(args[0].equalsIgnoreCase("kick")){
+        } else if (args[0].equalsIgnoreCase("kick")) {
             kick(sender, args);
-        }else if(args[0].equalsIgnoreCase("chat")){
+        } else if (args[0].equalsIgnoreCase("chat")) {
             chat(sender, args);
-        }else if(args[0].equalsIgnoreCase("info")){
+        } else if (args[0].equalsIgnoreCase("info")) {
             info(sender, args);
-        }else{
+        } else {
             printHelp(sender);
         }
         return true;
@@ -72,8 +73,10 @@ public class PartyCommand implements CommandExecutor {
                 "&a/party decline\n" +
                 "&a/party leave\n" +
                 "&a/party kick <player>\n" +
-                "&a/party chat [message]> oppure /pc [message]\n" +
-                "&a/party info"));
+                "&a/party chat [message]> &ooppure &r&a/pc [message]\n" +
+                "&a/party info\n" +
+                "&a/pos &oper inviare in party chat la tua posizione attuale"
+        ));
         sender.spigot().sendMessage(componentBuilder.create());
     }
 
@@ -87,7 +90,6 @@ public class PartyCommand implements CommandExecutor {
                 password = null;
             }
             PartyController partyController = plugin.getPartyController();
-            //TODO Il secondo controllo e' ridondante ma lo lascio per chiarezza
             if (partyController.isPlayerInParty(player.getUniqueId()) || partyController.doesPartyExist(player.getUniqueId())) {
                 player.sendMessage(TextUtility.parseColors(config.getString("already_in_party")));
             } else {
@@ -146,7 +148,7 @@ public class PartyCommand implements CommandExecutor {
                 try {
                     String partyLeaderName = args[1];
                     String password = args[2];
-                    Player partyLeader = Bukkit.getPlayer(partyLeaderName);
+                    OfflinePlayer partyLeader = Bukkit.getOfflinePlayer(partyLeaderName);
                     UUID partyLeaderUUID = partyLeader.getUniqueId();
                     if (partyController.isPlayerInParty(player.getUniqueId())) {
                         player.sendMessage(TextUtility.parseColors(config.getString("already_in_party")));
@@ -159,7 +161,9 @@ public class PartyCommand implements CommandExecutor {
                                 } else {
                                     partyController.addPlayerToParty(player.getUniqueId(), partyLeaderUUID);
                                     player.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("invite_accepted")).replace("%player%", partyLeaderName)));
-                                    partyLeader.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("accept_party_notification")).replace("%player%", player.getName())));
+                                    if(partyLeader.isOnline()){
+                                        Objects.requireNonNull(Bukkit.getPlayer(partyLeaderUUID)).sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("accept_party_notification")).replace("%player%", player.getName())));
+                                    }
                                 }
                             } catch (InvalidPartyException e) {
                                 player.sendMessage(TextUtility.parseColors(config.getString("invalid_party")));
@@ -203,8 +207,8 @@ public class PartyCommand implements CommandExecutor {
             } else {
                 sender.sendMessage("Only players can run that command");
             }
-        } catch (IndexOutOfBoundsException e) {
-            sender.sendMessage("Missing parameters. Use /party to see the list of available commands");
+        } catch (IndexOutOfBoundsException | NullPointerException e) {
+            sender.sendMessage("Missing or invalid parameters. Use /party to see the list of available commands");
         }
     }
 
@@ -220,10 +224,12 @@ public class PartyCommand implements CommandExecutor {
                             player.sendMessage(Objects.requireNonNull(config.getString("party_limit_reached")));
                         } else {
                             partyController.addPlayerToParty(player.getUniqueId(), partyLeaderUUID);
-                            Player partyLeader = Bukkit.getPlayer(partyLeaderUUID);
-                            assert partyLeader != null;
-                            player.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("invite_accepted")).replace("%player%", partyLeader.getName())));
-                            partyLeader.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("accept_party_notification")).replace("%player%", player.getName())));
+                            player.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("invite_accepted")).replace("%player%", Objects.requireNonNull(Bukkit.getOfflinePlayer(partyLeaderUUID).getName()))));
+                            if(Bukkit.getOfflinePlayer(partyLeaderUUID).isOnline()){
+                                Player partyLeader = Bukkit.getPlayer(partyLeaderUUID);
+                                assert partyLeader != null;
+                                partyLeader.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("accept_party_notification")).replace("%player%", player.getName())));
+                            }
                         }
                     } catch (InvalidPartyException e) {
                         player.sendMessage(TextUtility.parseColors(config.getString("invalid_party")));
@@ -245,10 +251,12 @@ public class PartyCommand implements CommandExecutor {
             PartyController partyController = plugin.getPartyController();
             if (partyController.hasPendingInvite(player.getUniqueId())) {
                 UUID partyLeaderUUID = partyController.removeInvite(player.getUniqueId());
-                Player partyLeader = Bukkit.getPlayer(partyLeaderUUID);
-                assert partyLeader != null;
-                player.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("invite_refused")).replace("%player%", partyLeader.getName())));
-                partyLeader.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("decline_party_notification")).replace("%player%", player.getName())));
+                player.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("invite_refused")).replace("%player%", Objects.requireNonNull(Bukkit.getOfflinePlayer(partyLeaderUUID).getName()))));
+                if(Bukkit.getOfflinePlayer(partyLeaderUUID).isOnline()){
+                    Player partyLeader = Bukkit.getPlayer(partyLeaderUUID);
+                    assert partyLeader != null;
+                    partyLeader.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("decline_party_notification")).replace("%player%", player.getName())));
+                }
             } else {
                 player.sendMessage(TextUtility.parseColors(config.getString("no_invites")));
             }
@@ -265,9 +273,12 @@ public class PartyCommand implements CommandExecutor {
                 if (partyController.isPartyLeader(player.getUniqueId())) {
                     player.sendMessage(TextUtility.parseColors(config.getString("party_leader_left")));
                 } else {
-                    UUID partyLeader = partyController.getPlayerParty(player.getUniqueId()).getLeader();
+                    UUID partyLeaderUUID = partyController.getPlayerParty(player.getUniqueId()).getLeader();
                     partyController.removePlayerFromParty(player.getUniqueId());
-                    Bukkit.getPlayer(partyLeader).sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("player_left_party")).replace("%player%", player.getName())));
+                    Player partyLeader = Bukkit.getPlayer(partyLeaderUUID);
+                    if (partyLeader != null) {
+                        partyLeader.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("player_left_party")).replace("%player%", player.getName())));
+                    }
                     player.sendMessage(TextUtility.parseColors(config.getString("player_left")));
                 }
             } else {
@@ -282,17 +293,18 @@ public class PartyCommand implements CommandExecutor {
         try {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-                Player toBeKicked = Bukkit.getPlayer(args[1]);
+                OfflinePlayer toBeKicked = Bukkit.getOfflinePlayer(args[1]);
                 PartyController partyController = plugin.getPartyController();
                 if (partyController.isPartyLeader(player.getUniqueId())) {
-                    assert toBeKicked != null;
                     if (partyController.getPlayerParty(player.getUniqueId()).equals(partyController.getPlayerParty(toBeKicked.getUniqueId()))) {
                         if (partyController.isPartyLeader(toBeKicked.getUniqueId())) {
                             player.sendMessage(TextUtility.parseColors("party_leader_left"));
                         } else {
                             partyController.removePlayerFromParty(toBeKicked.getUniqueId(), player.getUniqueId());
                             partyController.sendMessageToPartyMembers(player.getUniqueId(), Objects.requireNonNull(config.getString("player_kicked")).replace("%player%", toBeKicked.getName()));
-                            toBeKicked.sendMessage(TextUtility.parseColors(config.getString("kicked")));
+                            if (toBeKicked.isOnline()) {
+                                Objects.requireNonNull(Bukkit.getPlayer(args[1])).sendMessage(TextUtility.parseColors(config.getString("kicked")));
+                            }
                         }
                     } else {
                         player.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("player_not_in_party")).replace("%player%", toBeKicked.getName())));
@@ -313,7 +325,7 @@ public class PartyCommand implements CommandExecutor {
             Player player = (Player) sender;
             PartyController partyController = plugin.getPartyController();
             if (args.length > 1) {
-                if (partyController.isPlayerInParty(player.getUniqueId()) || partyController.doesPartyExist(player.getUniqueId())) {
+                if (partyController.isPlayerInParty(player.getUniqueId())) {
                     String message = String.join(" ", Arrays.asList(Arrays.copyOfRange(args, 1, args.length)));
                     partyController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
                 } else {
