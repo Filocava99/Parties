@@ -65,6 +65,7 @@ public final class FWParties extends JavaPlugin {
         storageController = new StorageController();
         config = storageController.loadConfig();
         partyController = storageController.loadParties();
+        chatController = new ChatController();
     }
 
     private void registerListeners() {
