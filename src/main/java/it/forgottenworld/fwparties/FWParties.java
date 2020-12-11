@@ -1,5 +1,6 @@
 package it.forgottenworld.fwparties;
 
+import it.forgottenworld.fwparties.command.AdminCommand;
 import it.forgottenworld.fwparties.command.ChatCommand;
 import it.forgottenworld.fwparties.command.PartyCommand;
 import it.forgottenworld.fwparties.command.PositionCommand;
@@ -56,6 +57,10 @@ public final class FWParties extends JavaPlugin {
         storageController.saveParties(partyController);
     }
 
+    public void reloadConfig(){
+        config = storageController.loadConfig();
+    }
+
     private void loadData() {
         storageController = new StorageController();
         config = storageController.loadConfig();
@@ -70,6 +75,7 @@ public final class FWParties extends JavaPlugin {
         Objects.requireNonNull(getCommand("party")).setExecutor(new PartyCommand());
         Objects.requireNonNull(getCommand("pc")).setExecutor(new ChatCommand());
         Objects.requireNonNull(getCommand("pos")).setExecutor(new PositionCommand());
+        Objects.requireNonNull(getCommand("partyadmin")).setExecutor(new AdminCommand());
     }
 
     private void registerTasks() {

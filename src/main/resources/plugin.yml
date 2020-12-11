@@ -10,7 +10,7 @@ commands:
       - p
       - fwparty
       - fwparties
-    permission: party.*
+    permission: party.default
     default: true
   pc:
     description: Party chat command
@@ -18,7 +18,7 @@ commands:
       - partychat
       - fwpartychat
       - fwpartieschat
-    permission: party.*
+    permission: party.chat
     default: true
   pos:
     description: Party position command
@@ -28,5 +28,12 @@ commands:
       - fwpartiespos
       - fwp
       - fwpos
-    permission: party.*
+    permission: party.pos
     default: true
+  partyadmin:
+    aliases:
+      - pa
+      - partya
+    description: Party admin commands
+    permission: party.admin
+    default: op

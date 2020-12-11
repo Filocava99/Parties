@@ -33,7 +33,6 @@ public class PartyController implements Serializable {
             Party party = partyMap.get(partyLeader);
             party.addPlayer(playerToAdd);
             playerMap.put(playerToAdd, party);
-            FWParties.getInstance().getChatController().registerPlayer(playerToAdd);
         }else{
             throw new InvalidPartyException();
         }
@@ -93,12 +92,10 @@ public class PartyController implements Serializable {
         Party party = new Party(partyLeader, password);
         partyMap.put(partyLeader, party);
         playerMap.put(partyLeader, party);
-        FWParties.getInstance().getChatController().registerPlayer(partyLeader);
     }
 
     public void createParty(UUID partyLeader){
         createParty(partyLeader, null);
-        FWParties.getInstance().getChatController().registerPlayer(partyLeader);
     }
 
     public int getPartySize(UUID partyLeader) throws InvalidPartyException {
