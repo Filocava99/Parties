@@ -4,6 +4,7 @@ import it.forgottenworld.fwparties.command.ChatCommand;
 import it.forgottenworld.fwparties.command.PartyCommand;
 import it.forgottenworld.fwparties.command.PositionCommand;
 import it.forgottenworld.fwparties.config.Config;
+import it.forgottenworld.fwparties.controller.ChatController;
 import it.forgottenworld.fwparties.controller.PartyController;
 import it.forgottenworld.fwparties.controller.StorageController;
 import it.forgottenworld.fwparties.listener.PlayerListener;
@@ -18,6 +19,7 @@ public final class FWParties extends JavaPlugin {
 
     private StorageController storageController;
     private PartyController partyController;
+    private ChatController chatController;
     private Config config;
 
     @Override
@@ -40,6 +42,10 @@ public final class FWParties extends JavaPlugin {
 
     public PartyController getPartyController() {
         return partyController;
+    }
+
+    public ChatController getChatController() {
+        return chatController;
     }
 
     public Config getPluginConfig() {

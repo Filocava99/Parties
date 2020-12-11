@@ -1,6 +1,7 @@
 package it.forgottenworld.fwparties.command;
 
 import it.forgottenworld.fwparties.FWParties;
+import it.forgottenworld.fwparties.controller.ChatController;
 import it.forgottenworld.fwparties.controller.PartyController;
 import it.forgottenworld.fwparties.exception.InvalidPartyException;
 import it.forgottenworld.fwparties.party.Party;
@@ -106,7 +107,7 @@ public class PartyCommand implements CommandExecutor {
             Player player = (Player) sender;
             PartyController partyController = plugin.getPartyController();
             if (partyController.isPartyLeader(player.getUniqueId())) {
-                partyController.sendMessageToPartyMembers(player.getUniqueId(), Objects.requireNonNull(config.getString("disband_message")).replace("%player%", player.getName()));
+                plugin.getChatController().sendMessageToPartyMembers(player.getUniqueId(), Objects.requireNonNull(config.getString("disband_message")).replace("%player%", player.getName()));
                 partyController.deleteParty(player.getUniqueId());
             } else {
                 player.sendMessage(TextUtility.parseColors(config.getString("error_message")));
@@ -301,7 +302,7 @@ public class PartyCommand implements CommandExecutor {
                             player.sendMessage(TextUtility.parseColors("party_leader_left"));
                         } else {
                             partyController.removePlayerFromParty(toBeKicked.getUniqueId(), player.getUniqueId());
-                            partyController.sendMessageToPartyMembers(player.getUniqueId(), Objects.requireNonNull(config.getString("player_kicked")).replace("%player%", toBeKicked.getName()));
+                            plugin.getChatController().sendMessageToPartyMembers(player.getUniqueId(), Objects.requireNonNull(config.getString("player_kicked")).replace("%player%", toBeKicked.getName()));
                             if (toBeKicked.isOnline()) {
                                 Objects.requireNonNull(Bukkit.getPlayer(args[1])).sendMessage(TextUtility.parseColors(config.getString("kicked")));
                             }
@@ -324,20 +325,21 @@ public class PartyCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             PartyController partyController = plugin.getPartyController();
+            ChatController chatController = plugin.getChatController();
             if (args.length > 1) {
                 if (partyController.isPlayerInParty(player.getUniqueId())) {
                     String message = String.join(" ", Arrays.asList(Arrays.copyOfRange(args, 1, args.length)));
-                    partyController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
+                    chatController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
                 } else {
                     player.sendMessage(TextUtility.parseColors(config.getString("not_on_party")));
                 }
             } else {
-                if (partyController.isPlayerChatting(player.getUniqueId())) {
+                if (chatController.isPlayerChatting(player.getUniqueId())) {
                     player.sendMessage(TextUtility.parseColors("&eParty chat disabilitata!"));
-                    partyController.removeChattingPlayer(player.getUniqueId());
+                    chatController.removeChattingPlayer(player.getUniqueId());
                 } else {
                     player.sendMessage(TextUtility.parseColors("&eParty chat abilitata!"));
-                    partyController.addChattingPlayer(player.getUniqueId());
+                    chatController.addChattingPlayer(player.getUniqueId());
                 }
             }
         } else {

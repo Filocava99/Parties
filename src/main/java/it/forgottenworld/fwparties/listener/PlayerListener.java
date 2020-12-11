@@ -1,6 +1,7 @@
 package it.forgottenworld.fwparties.listener;
 
 import it.forgottenworld.fwparties.FWParties;
+import it.forgottenworld.fwparties.controller.ChatController;
 import it.forgottenworld.fwparties.controller.PartyController;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -87,10 +88,11 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         String message = event.getMessage();
         PartyController partyController = plugin.getPartyController();
+        ChatController chatController = plugin.getChatController();
         if(partyController.isPlayerInParty(player.getUniqueId())){
-            if (partyController.isPlayerChatting(player.getUniqueId())) {
+            if (chatController.isPlayerChatting(player.getUniqueId())) {
                 event.setCancelled(true);
-                partyController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
+                chatController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
             }
         }
     }

@@ -18,7 +18,7 @@ public class PositionCommand implements CommandExecutor {
             PartyController partyController = FWParties.getInstance().getPartyController();
             if (partyController.isPlayerInParty(player.getUniqueId())) {
                 String message = ChatColor.GREEN +  "X: " + ChatColor.GOLD + player.getLocation().getBlockX() + ChatColor.GREEN + "  Y: " + ChatColor.GOLD + player.getLocation().getBlockY() + ChatColor.GREEN + "  Z: " + ChatColor.GOLD + player.getLocation().getBlockZ();
-                partyController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
+                FWParties.getInstance().getChatController().sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
             } else {
                 player.sendMessage(TextUtility.parseColors(FWParties.getInstance().getPluginConfig().getConfig().getString("not_on_party")));
             }

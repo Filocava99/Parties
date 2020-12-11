@@ -1,9 +1,8 @@
 package it.forgottenworld.fwparties.controller;
 
-import it.forgottenworld.fwparties.party.Party;
+import it.forgottenworld.fwparties.FWParties;
 import it.forgottenworld.fwparties.exception.InvalidPartyException;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import it.forgottenworld.fwparties.party.Party;
 import org.bukkit.entity.Player;
 
 import java.io.Serializable;
@@ -16,7 +15,6 @@ public class PartyController implements Serializable {
     private final Map<UUID, UUID> inviteMap = new HashMap<>();
     private final Map<UUID, Party> partyMap = new HashMap<>();
     private final Map<UUID, Party> playerMap = new HashMap<>();
-    private final Map<UUID, Boolean> isPlayerChat = new HashMap<>();
 
     public void addInvite(UUID playerInvited, UUID partyToJoin){
         inviteMap.put(playerInvited, partyToJoin);
@@ -35,7 +33,7 @@ public class PartyController implements Serializable {
             Party party = partyMap.get(partyLeader);
             party.addPlayer(playerToAdd);
             playerMap.put(playerToAdd, party);
-            isPlayerChat.put(playerToAdd, false);
+            FWParties.getInstance().getChatController().registerPlayer(playerToAdd);
         }else{
             throw new InvalidPartyException();
         }
@@ -46,7 +44,7 @@ public class PartyController implements Serializable {
             Party party = partyMap.get(partyLeader);
             party.removePlayer(player);
             playerMap.remove(player);
-            isPlayerChat.remove(player);
+            FWParties.getInstance().getChatController().removeChattingPlayer(player);
         }
     }
 
@@ -55,7 +53,7 @@ public class PartyController implements Serializable {
             Party party = playerMap.remove(player);
             party.removePlayer(player);
             playerMap.remove(player);
-            isPlayerChat.remove(player);
+            FWParties.getInstance().getChatController().removeChattingPlayer(player);
         }
     }
 
@@ -74,7 +72,12 @@ public class PartyController implements Serializable {
     public void deleteParty(UUID partyLeader){
         if(partyMap.containsKey(partyLeader)){
             Party party = partyMap.remove(partyLeader);
-            party.getPlayerList().forEach(playerMap::remove);
+            party.getPlayerList().forEach(uuid -> {
+                if(inviteMap.containsKey(uuid)){
+                    inviteMap.remove(uuid);
+                    playerMap.remove(uuid);
+                }
+            });
         }
     }
 
@@ -90,12 +93,12 @@ public class PartyController implements Serializable {
         Party party = new Party(partyLeader, password);
         partyMap.put(partyLeader, party);
         playerMap.put(partyLeader, party);
-        isPlayerChat.put(partyLeader, false);
+        FWParties.getInstance().getChatController().registerPlayer(partyLeader);
     }
 
     public void createParty(UUID partyLeader){
         createParty(partyLeader, null);
-        isPlayerChat.put(partyLeader, false);
+        FWParties.getInstance().getChatController().registerPlayer(partyLeader);
     }
 
     public int getPartySize(UUID partyLeader) throws InvalidPartyException {
@@ -103,17 +106,6 @@ public class PartyController implements Serializable {
             return partyMap.get(partyLeader).getPlayersNumber();
         }catch (Exception e){
             throw new InvalidPartyException();
-        }
-    }
-
-    public void sendMessageToPartyMembers(UUID partyLeader, String message){
-        if(partyMap.containsKey(partyLeader)){
-            for(UUID uuid : partyMap.get(partyLeader).getPlayerList()){
-                Player player = Bukkit.getPlayer(uuid);
-                if(player != null){
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',message));
-                }
-            }
         }
     }
 
@@ -126,15 +118,4 @@ public class PartyController implements Serializable {
         return false;
     }
 
-    public void addChattingPlayer(UUID player) {
-        isPlayerChat.replace(player, true);
-    }
-
-    public void removeChattingPlayer(UUID player) {
-        isPlayerChat.replace(player, false);
-    }
-
-    public Boolean isPlayerChatting(UUID player) {
-        return isPlayerChat.get(player);
-    }
 }
