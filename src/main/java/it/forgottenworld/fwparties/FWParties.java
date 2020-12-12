@@ -26,6 +26,7 @@ public final class FWParties extends JavaPlugin {
     @Override
     public void onEnable() {
         INSTANCE = this;
+        chatController = new ChatController();
         loadData();
         registerListeners();
         registerCommands();
@@ -65,7 +66,6 @@ public final class FWParties extends JavaPlugin {
         storageController = new StorageController();
         config = storageController.loadConfig();
         partyController = storageController.loadParties();
-        chatController = new ChatController();
     }
 
     private void registerListeners() {

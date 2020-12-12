@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public class ChatController {
 
-    private final Map<UUID, Boolean> chattingPlayers = new HashMap<>();
+    private final Set<UUID> chattingPlayers = new HashSet<>();
     private final Set<UUID> spyingChatPlayers = new HashSet<>();
 
     public boolean isPlayerSpyingChat(UUID player){
@@ -40,14 +40,14 @@ public class ChatController {
     }
 
     public void addChattingPlayer(UUID player) {
-        chattingPlayers.replace(player, true);
+        chattingPlayers.add(player);
     }
 
     public void removeChattingPlayer(UUID player) {
-        chattingPlayers.replace(player, false);
+        chattingPlayers.remove(player);
     }
 
     public Boolean isPlayerChatting(UUID player) {
-        return chattingPlayers.containsKey(player) && chattingPlayers.get(player);
+        return chattingPlayers.contains(player);
     }
 }
