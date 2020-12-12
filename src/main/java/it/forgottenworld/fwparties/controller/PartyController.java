@@ -59,9 +59,9 @@ public class PartyController implements Serializable {
 
     public void removePlayerFromParty(UUID player) {
         if (playerMap.containsKey(player)) {
+            removePlayerFromScoreboard(player);
             Party party = playerMap.remove(player);
             party.removePlayer(player);
-            removePlayerFromScoreboard(player);
             playerMap.remove(player);
             FWParties.getInstance().getChatController().removeChattingPlayer(player);
         }
