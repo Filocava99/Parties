@@ -57,6 +57,10 @@ public class PartyCommand implements CommandExecutor {
             chat(sender, args);
         } else if (args[0].equalsIgnoreCase("info")) {
             info(sender, args);
+        } else if (args[0].equalsIgnoreCase("color")) {
+            color(sender, args);
+        }else if (args[0].equalsIgnoreCase("scoreboard")) {
+            scoreboard(sender, args);
         } else {
             printHelp(sender);
         }
@@ -76,6 +80,8 @@ public class PartyCommand implements CommandExecutor {
                 "&a/party kick <player>\n" +
                 "&a/party chat [message]> &ooppure &r&a/pc [message]\n" +
                 "&a/party info\n" +
+                "&a/party color <colorCode>\n" +
+                "&a/party scoreboard <on/off>\n" +
                 "&a/pos &oper inviare in party chat la tua posizione attuale"
         ));
         sender.spigot().sendMessage(componentBuilder.create());
@@ -353,6 +359,52 @@ public class PartyCommand implements CommandExecutor {
             Player player = (Player) sender;
             if (partyManager.isPlayerInParty(player.getUniqueId())) {
                 player.sendMessage(TextUtility.parseColors(partyManager.getPlayerParty(player.getUniqueId()).getPartyInfo()));
+            } else {
+                player.sendMessage(TextUtility.parseColors(config.getString("not_on_party")));
+            }
+        } else {
+            sender.sendMessage("Only players can run that command");
+        }
+    }
+
+    private void color(CommandSender sender, String[] args){
+        if (sender instanceof Player) {
+            PartyController partyManager = plugin.getPartyController();
+            Player player = (Player) sender;
+            if (partyManager.isPartyLeader(player.getUniqueId())) {
+                if(args.length > 0){
+                    try{
+                        partyManager.setPartyColor(player.getUniqueId(),args[0].charAt(0));
+                    }catch (Exception e){
+                        player.sendMessage(ChatColor.RED + "Invalid color code");
+                    }
+                }else{
+                    player.sendMessage(ChatColor.RED + "Not enough parameters");
+                }
+            } else {
+                player.sendMessage(TextUtility.parseColors(config.getString("not_on_party")));
+            }
+        } else {
+            sender.sendMessage("Only players can run that command");
+        }
+    }
+
+    private void scoreboard(CommandSender sender, String[] args){
+        if (sender instanceof Player) {
+            PartyController partyManager = plugin.getPartyController();
+            Player player = (Player) sender;
+            if (partyManager.isPlayerInParty(player.getUniqueId())) {
+                if(args.length > 1){
+                    if(args[1].equalsIgnoreCase("on")){
+                        partyManager.addPlayerToScoreboard(player.getUniqueId());
+                    }else if(args[1].equalsIgnoreCase("off")){
+                        partyManager.removePlayerFromScoreboard(player.getUniqueId());
+                    }else{
+                        sender.sendMessage(ChatColor.RED + "Invalid parameters");
+                    }
+                }else{
+                    player.sendMessage(ChatColor.RED + "Not enough parameters");
+                }
             } else {
                 player.sendMessage(TextUtility.parseColors(config.getString("not_on_party")));
             }

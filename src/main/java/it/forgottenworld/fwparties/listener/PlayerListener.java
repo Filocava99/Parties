@@ -8,10 +8,14 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
@@ -29,10 +33,19 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamaged(EntityDamageByEntityEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event){
+        PartyController partyController = plugin.getPartyController();
+        if(partyController.isPlayerInParty(event.getPlayer().getUniqueId())){
+            partyController.removePlayerFromScoreboard(event.getPlayer().getUniqueId());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityDamagedByEntity(EntityDamageByEntityEvent event) {
         Entity damagerEntity = event.getDamager();
         Entity damagedEntity = event.getEntity();
         if (damagedEntity instanceof Player) {
+            Player target = (Player) damagedEntity;
             Player damager;
             if (damagerEntity instanceof Projectile) {
                 ProjectileSource projectileSource = ((Projectile) damagerEntity).getShooter();
@@ -46,13 +59,26 @@ public class PlayerListener implements Listener {
             } else {
                 return;
             }
-            Player target = (Player) damagedEntity;
             if(FWParties.getInstance().getPluginConfig().getConfig().getStringList("always_on_friendly_fire_worlds").contains(Objects.requireNonNull(target.getLocation().getWorld()).getName())){
                 return;
             }
             if (plugin.getPartyController().areInSameParty(damager, target)) {
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamaged(EntityDamageEvent event){
+        if(event.getEntity() instanceof Player){
+            updatePlayerHealthInScoreboard((Player) event.getEntity());
+        }
+    }
+
+    @EventHandler
+    public void onRegen(EntityRegainHealthEvent event){
+        if(event.getEntity() instanceof Player){
+            updatePlayerHealthInScoreboard((Player) event.getEntity());
         }
     }
 
@@ -94,6 +120,13 @@ public class PlayerListener implements Listener {
                 event.setCancelled(true);
                 chatController.sendMessageToPartyMembers(partyController.getPlayerParty(player.getUniqueId()).getLeader(), "&2[PARTY] &a" + player.getName() + ": " + message);
             }
+        }
+    }
+
+    private void updatePlayerHealthInScoreboard(Player player){
+        PartyController partyController = plugin.getPartyController();
+        if(partyController.isPlayerInParty(player.getUniqueId())){
+            partyController.updatePlayerHealthInScoreboard(player);
         }
     }
 }

@@ -1,0 +1,92 @@
+############
+# SETTINGS #
+############
+
+#Max players per party
+party_limit: 50
+
+#Always on friendly fire worlds
+always_on_friendly_fire_worlds:
+  - world
+
+############
+# MESSAGES #
+############
+
+#Max players per party message
+party_limit_reached: "&cIl limite del party e' stato raggiunto!"
+
+#invite-message
+invite_message: "&eHai invitato %player% al tuo party!"
+
+#invite-received-message
+invite_received_message: "&eHai ricevuto l'invito ad entrare nel party di %player%! Digita\n/party accept per accettare\n/party decline per rifiutare"
+
+#invite-refused
+invite_refused: "&eHai rifiutato l'invito al party di %player%!"
+
+#declined-party-notification
+decline_party_notification: "&e%player% ha rifiutato l'invito al party!"
+
+#disband-message
+disband_message: "&cIl party di %player% e' stato cancellato!"
+
+#invite-accepted
+invite_accepted: "&aSei entrato nel party di %player%!"
+
+#accept-party-notification
+accept_party_notification: "&a%player% e' entrato nel party!"
+
+#player-left-party
+player_left_party: "&c%player% e' uscito dal party!"
+
+#player-left
+player_left: "&eSei uscito dal party!"
+
+#not-leader
+not_leader: "&cNon sei ne il leader del party ne Tigierrei!"
+
+#not-on-party
+not_on_party: "&cNon sei in nessun party!"
+
+#cannot-invite-yourself
+cannot_invite_yourself: "&cNon puoi auto invitarti!"
+
+#no-invite-to-accept
+no_invites: "&cNon hai nessun invito in sospeso!"
+
+#already-in-party
+already_in_party: "&cSei gia' in un party!"
+
+#player-already-in-party
+player_already_in_party: "&c%player% e' già in un party!"
+
+#error-message
+error_message: "&cNon sei in un party oppure non sei il party leader!"
+
+#insufficient-parameters
+insufficient_parameters: "&cParametri insufficienti!"
+
+#wrong-password
+wrong_password: "&cPassword sbagliata!"
+
+#password-changed
+password_changed: "&aPassword modificata!"
+
+#invalid-party
+invalid_party: "&cIl party a cui stai tentando di accedere non esiste piu'!"
+
+#party-created
+party_created: "&aParty creato con successo!"
+
+#party-leader-left
+party_leader_left: "&cSei il leader del party, non puoi uscire! Usa /party disband per cancellare il party!"
+
+#player_not_in_party
+player_not_in_party: "&c%player% non e' nel tuo party!"
+
+#player_kicked
+player_kicked: "&e%player% e' stato rimosso dal party!"
+
+#kicked
+kicked: "&cSei stato rimosso dal party!"

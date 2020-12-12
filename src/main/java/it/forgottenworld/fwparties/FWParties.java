@@ -66,6 +66,7 @@ public final class FWParties extends JavaPlugin {
         storageController = new StorageController();
         config = storageController.loadConfig();
         partyController = storageController.loadParties();
+        partyController.initializeScoreboardMap();
     }
 
     private void registerListeners() {
