@@ -205,7 +205,6 @@ public class PartyCommand implements CommandExecutor {
                 } else if (partyManager.doesPartyExist(partyLeader.getUniqueId()) && partyManager.getParty(partyLeader.getUniqueId()).getPlayerList().contains(Objects.requireNonNull(playerInvited).getUniqueId())) {
                     sender.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("player_already_in_party")).replace("%player%", playerInvited.getName())));
                 } else {
-                    plugin.getPartyController().createParty(partyLeader.getUniqueId());
                     assert playerInvited != null;
                     plugin.getPartyController().addInvite(playerInvited.getUniqueId(), partyLeader.getUniqueId());
                     partyLeader.sendMessage(TextUtility.parseColors(Objects.requireNonNull(config.getString("invite_message")).replace("%player%", playerInvited.getName())));
