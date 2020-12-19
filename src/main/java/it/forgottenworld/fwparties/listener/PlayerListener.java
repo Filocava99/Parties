@@ -124,6 +124,7 @@ public class PlayerListener implements Listener {
     }
 
     private void updatePlayerHealthInScoreboard(Player player){
+        System.out.println("triggered");
         PartyController partyController = plugin.getPartyController();
         if(partyController.isPlayerInParty(player.getUniqueId())){
             partyController.updatePlayerHealthInScoreboard(player);

@@ -49,8 +49,9 @@ public class PartyController implements Serializable {
     public void removePlayerFromParty(UUID player, UUID partyLeader) {
         if (partyMap.containsKey(partyLeader)) {
             Party party = partyMap.get(partyLeader);
-            party.removePlayer(player);
+            removePlayerFromTeam(player);
             removePlayerFromScoreboard(player);
+            party.removePlayer(player);
             playerMap.remove(player);
             FWParties.getInstance().getChatController().removeChattingPlayer(player);
             removePlayerFromParty(player);
@@ -59,6 +60,7 @@ public class PartyController implements Serializable {
 
     public void removePlayerFromParty(UUID player) {
         if (playerMap.containsKey(player)) {
+            removePlayerFromTeam(player);
             removePlayerFromScoreboard(player);
             Party party = playerMap.remove(player);
             party.removePlayer(player);
@@ -83,6 +85,7 @@ public class PartyController implements Serializable {
         if (partyMap.containsKey(partyLeader)) {
             Party party = partyMap.remove(partyLeader);
             party.getPlayerList().forEach(uuid -> {
+                removePlayerFromTeam(uuid);
                 removePlayerFromScoreboard(uuid);
                 inviteMap.remove(uuid);
                 playerMap.remove(uuid);
@@ -169,6 +172,8 @@ public class PartyController implements Serializable {
         Player onlinePlayer = Bukkit.getPlayer(player);
         team.addEntry(onlinePlayer.getName());
         scoreboard.getObjective(partyLeader.toString().substring(0,16)).getScore(onlinePlayer.getName()).setScore((int)onlinePlayer.getHealth());
+        scoreboard.resetScores(ChatColor.GREEN + ">> Players: " + ChatColor.BOLD + (partyMap.get(partyLeader).getPlayerList().size()-1));
+        scoreboard.getObjective(partyLeader.toString().substring(0, 16)).getScore(ChatColor.GREEN + ">> Players: " + ChatColor.BOLD + (partyMap.get(partyLeader).getPlayerList().size())).setScore(21);
         onlinePlayer.setScoreboard(scoreboard);
     }
 
@@ -176,9 +181,7 @@ public class PartyController implements Serializable {
         UUID partyLeader = playerMap.get(player).getLeader();
         if (scoreboardMap.containsKey(partyLeader)) {
             Scoreboard scoreboard = scoreboardMap.get(partyLeader);
-            Team team = scoreboard.getTeam(partyLeader.toString().substring(0, 16));
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(player);
-            team.removeEntry(offlinePlayer.getName());
             scoreboard.resetScores(offlinePlayer.getName());
             Player onlinePlayer = Bukkit.getPlayer(player);
             if(onlinePlayer != null){
@@ -187,7 +190,21 @@ public class PartyController implements Serializable {
         }
     }
 
-    public void updatePlayerHealthInScoreboard(Player player){
+    public void removePlayerFromTeam(UUID player){
+        UUID partyLeader = playerMap.get(player).getLeader();
+        Scoreboard scoreboard = scoreboardMap.get(partyLeader);
+        scoreboard.resetScores(ChatColor.GREEN + ">> Players: " + ChatColor.BOLD + partyMap.get(partyLeader).getPlayerList().size());
+        scoreboard.getObjective(partyLeader.toString().substring(0, 16)).getScore(ChatColor.GREEN + ">> Players: " + ChatColor.BOLD + (partyMap.get(partyLeader).getPlayerList().size()-1)).setScore(21);
+        Team team = scoreboard.getTeam(partyLeader.toString().substring(0, 16));
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(player);
+        team.removeEntry(offlinePlayer.getName());
+    }
 
+    public void updatePlayerHealthInScoreboard(Player player){
+        UUID partyLeader = playerMap.get(player.getUniqueId()).getLeader();
+        if (scoreboardMap.containsKey(partyLeader)) {
+            Scoreboard scoreboard = scoreboardMap.get(partyLeader);
+            scoreboard.getObjective(partyLeader.toString().substring(0,16)).getScore(player.getName()).setScore((int)Math.floor(player.getHealth()));
+        }
     }
 }
