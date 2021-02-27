@@ -7,7 +7,7 @@ party_limit: 50
 
 #Always on friendly fire worlds
 always_on_friendly_fire_worlds:
-  - world
+  - world-default
 
 ############
 # MESSAGES #

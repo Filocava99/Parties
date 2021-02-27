@@ -49,6 +49,7 @@ public class PartyController implements Serializable {
         if (partyMap.containsKey(partyLeader)) {
             Party party = partyMap.get(partyLeader);
             removePlayerFromTeam(player);
+            addPlayerToScoreboard(player);
             removePlayerFromScoreboard(player);
             party.removePlayer(player);
             playerMap.remove(player);
