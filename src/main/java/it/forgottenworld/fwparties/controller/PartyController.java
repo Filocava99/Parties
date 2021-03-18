@@ -48,8 +48,8 @@ public class PartyController implements Serializable {
     public void removePlayerFromParty(UUID player, UUID partyLeader) {
         if (partyMap.containsKey(partyLeader)) {
             Party party = partyMap.get(partyLeader);
-            removePlayerFromTeam(player);
             addPlayerToScoreboard(player);
+            removePlayerFromTeam(player);
             removePlayerFromScoreboard(player);
             party.removePlayer(player);
             playerMap.remove(player);
@@ -77,6 +77,7 @@ public class PartyController implements Serializable {
         if (partyMap.containsKey(partyLeader)) {
             Party party = partyMap.get(partyLeader);
             party.getPlayerList().forEach(uuid -> {
+                addPlayerToScoreboard(uuid);
                 removePlayerFromTeam(uuid);
                 removePlayerFromScoreboard(uuid);
                 inviteMap.remove(uuid);
@@ -187,9 +188,6 @@ public class PartyController implements Serializable {
     public void removePlayerFromTeam(UUID player){
         UUID partyLeader = playerMap.get(player).getLeader();
         Scoreboard scoreboard = scoreboardMap.get(partyLeader);
-        if(scoreboard == null) System.out.println("samu gay");
-        if(partyMap.get(partyLeader) == null) System.out.println("cacca");
-        if(partyMap.get(partyLeader).getPlayerList() == null) System.out.println("merda");
         scoreboard.resetScores(ChatColor.GREEN + ">> Players: " + ChatColor.BOLD + partyMap.get(partyLeader).getPlayerList().size());
         scoreboard.getObjective(partyLeader.toString().substring(0, 16)).getScore(ChatColor.GREEN + ">> Players: " + ChatColor.BOLD + (partyMap.get(partyLeader).getPlayerList().size()-1)).setScore(21);
         Team team = scoreboard.getTeam(partyLeader.toString().substring(0, 16));
