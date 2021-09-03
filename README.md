@@ -1,2 +1,2 @@
 # Parties
-A Spigot party plugin originally developed for ForgottenWorld by Tigierrei, now maintained by him for AncientRealms
+A Spigot party plugin developed for AncientRealms' Towny server
