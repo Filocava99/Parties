@@ -9,6 +9,8 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.io.FileOutputStream
+import java.io.PrintWriter
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
@@ -35,12 +37,7 @@ class StorageManagerImp : StorageManager {
     }
 
     override fun saveParties(partyManager: PartyManager) {
-        Files.writeString(
-            File(Parties.INSTANCE.dataFolder, "parties.json").toPath(),
-            Json.encodeToString(partyManager),
-            Charset.defaultCharset(),
-            StandardOpenOption.WRITE
-        )
+        PrintWriter(FileOutputStream(File(Parties.INSTANCE.dataFolder, "parties.json"), false)).write(Json.encodeToString(partyManager))
     }
 
     override fun runSerializationTask() {
