@@ -2,14 +2,12 @@ package it.ancientrealms.manager
 
 import it.ancientrealms.Parties
 import it.ancientrealms.api.ChatManager
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import java.util.*
 import java.util.stream.Stream
 import kotlin.collections.HashSet
 
-@ExperimentalSerializationApi
 class ChatManagerImp : ChatManager {
 
     private val chattingPlayers = HashSet<UUID>()

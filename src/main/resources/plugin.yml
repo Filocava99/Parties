@@ -1,41 +1,31 @@
-name: FWParties
-version: @version@
-main: it.forgottenworld.fwparties.FWParties
+name: Parties
+version: 1.0.1
+main: it.ancientrealms.Parties
+description: "Lightweight party plugin"
 api-version: 1.16
 authors: [ tigierrei ]
 depend:
   - KotlinLib
+  - ConfigAPI
 commands:
   party:
     description: Party command
-    aliases:
-      - p
-      - fwparty
-      - fwparties
-    permission: party.default
+    permission: parties.party.*
     default: true
   pc:
     description: Party chat command
     aliases:
       - partychat
-      - fwpartychat
-      - fwpartieschat
-    permission: party.chat
+    permission: parties.chat
     default: true
   pos:
     description: Party position command
     aliases:
       - position
-      - fwpartypos
-      - fwpartiespos
-      - fwp
-      - fwpos
     permission: party.pos
     default: true
   partyadmin:
     aliases:
-      - pa
-      - partya
     description: Party admin commands
     permission: party.admin
     default: op

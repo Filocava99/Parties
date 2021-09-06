@@ -4,18 +4,8 @@ import it.ancientrealms.Parties
 import it.ancientrealms.api.PartyManager
 import it.ancientrealms.api.StorageManager
 import it.tigierrei.configapi.Config
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import java.io.File
-import java.io.FileOutputStream
-import java.io.PrintWriter
-import java.nio.charset.Charset
-import java.nio.file.Files
-import java.nio.file.StandardOpenOption
+import java.io.*
 
-@ExperimentalSerializationApi
 class StorageManagerImp : StorageManager {
 
     override fun loadConfig(): Config = Config(File(Parties.INSTANCE.dataFolder, "config.yml"), Parties.INSTANCE)
@@ -26,10 +16,7 @@ class StorageManagerImp : StorageManager {
             "parties.json"
         )
         return if(file.exists()){
-            Json.decodeFromString<PartyManager>(
-                Files.readAllLines(
-                    file.toPath()
-                ).joinToString())
+            ObjectInputStream(FileInputStream(file)).readObject() as PartyManagerImp
         }else{
             PartyManagerImp()
         }
@@ -37,7 +24,10 @@ class StorageManagerImp : StorageManager {
     }
 
     override fun saveParties(partyManager: PartyManager) {
-        PrintWriter(FileOutputStream(File(Parties.INSTANCE.dataFolder, "parties.json"), false)).write(Json.encodeToString(partyManager))
+        ObjectOutputStream(FileOutputStream(File(
+            Parties.INSTANCE.dataFolder,
+            "parties.json"
+        ))).writeObject(partyManager)
     }
 
     override fun runSerializationTask() {

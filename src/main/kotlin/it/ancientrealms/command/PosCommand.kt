@@ -2,13 +2,11 @@ package it.ancientrealms.command
 
 import it.ancientrealms.Parties
 import it.ancientrealms.utils.TextUtils
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@ExperimentalSerializationApi
 class PosCommand : SubCommand() {
     override fun getPermission(): String = "parties.pos"
 

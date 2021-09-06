@@ -1,7 +1,6 @@
 package it.ancientrealms.listener
 
 import it.ancientrealms.Parties
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.bukkit.entity.Player
 import org.bukkit.entity.Projectile
 import org.bukkit.event.EventHandler
@@ -12,7 +11,6 @@ import org.bukkit.event.entity.PotionSplashEvent
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.potion.PotionEffectType
 
-@ExperimentalSerializationApi
 class PlayerListener : Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)

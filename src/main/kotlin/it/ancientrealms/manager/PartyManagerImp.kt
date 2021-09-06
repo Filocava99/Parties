@@ -1,19 +1,13 @@
-@file:UseContextualSerialization(UUID::class)
-
 package it.ancientrealms.manager
 
 import it.ancientrealms.api.PartyManager
 import it.ancientrealms.model.Party
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.UseContextualSerialization
+import java.io.Serializable
 import java.util.*
 
 
-@Serializable
-class PartyManagerImp : PartyManager {
+class PartyManagerImp : PartyManager, Serializable {
 
-    @Contextual
     private val inviteMap = HashMap<UUID, UUID>()
     private val partyMap = HashMap<UUID, Party>()
     private val playerMap = HashMap<UUID, Party>()
@@ -54,6 +48,8 @@ class PartyManagerImp : PartyManager {
 
     override fun createParty(partyLeader: UUID, password: String?) {
         val party = Party(partyLeader, password ?: UUID.randomUUID().toString(), mutableSetOf<UUID>(partyLeader))
+        partyMap[partyLeader] = party
+        playerMap[partyLeader] = party
     }
 
     override fun createParty(partyLeader: UUID) {

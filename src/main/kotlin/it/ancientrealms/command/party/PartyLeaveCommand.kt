@@ -3,13 +3,11 @@ package it.ancientrealms.command.party
 import it.ancientrealms.Parties
 import it.ancientrealms.command.SubCommand
 import it.ancientrealms.utils.TextUtils
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@ExperimentalSerializationApi
 class PartyLeaveCommand : SubCommand() {
     override fun getPermission(): String = "parties.party.leave"
 

@@ -1,18 +1,14 @@
-@file:UseContextualSerialization(UUID::class)
-
 package it.ancientrealms.model
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.UseContextualSerialization
 import org.bukkit.Bukkit
+import java.io.Serializable
 import java.util.*
 
-@Serializable
 data class Party(
     val leader: UUID,
     var password: String,
     val playerList: MutableSet<UUID>
-){
+) : Serializable{
     init {
         playerList.add(leader)
     }

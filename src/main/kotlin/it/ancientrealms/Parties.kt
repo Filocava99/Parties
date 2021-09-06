@@ -12,12 +12,10 @@ import it.ancientrealms.listener.PlayerListener
 import it.ancientrealms.manager.ChatManagerImp
 import it.ancientrealms.manager.StorageManagerImp
 import it.tigierrei.configapi.Config
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandExecutor
 import org.bukkit.plugin.java.JavaPlugin
 
-@ExperimentalSerializationApi
 class Parties : JavaPlugin() {
 
     lateinit var config: Config
