@@ -13,7 +13,7 @@ class StorageManagerImp : StorageManager {
     override fun loadParties(): PartyManager {
         val file = File(
             Parties.INSTANCE.dataFolder,
-            "parties.json"
+            "parties.dat"
         )
         return if(file.exists()){
             ObjectInputStream(FileInputStream(file)).readObject() as PartyManagerImp
@@ -26,7 +26,7 @@ class StorageManagerImp : StorageManager {
     override fun saveParties(partyManager: PartyManager) {
         ObjectOutputStream(FileOutputStream(File(
             Parties.INSTANCE.dataFolder,
-            "parties.json"
+            "parties.dat"
         ))).writeObject(partyManager)
     }
 
