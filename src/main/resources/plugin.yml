@@ -3,6 +3,8 @@ version: @version@
 main: it.forgottenworld.fwparties.FWParties
 api-version: 1.16
 authors: [ tigierrei ]
+depend:
+  - KotlinLib
 commands:
   party:
     description: Party command

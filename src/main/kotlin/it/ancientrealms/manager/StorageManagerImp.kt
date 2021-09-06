@@ -18,14 +18,21 @@ class StorageManagerImp : StorageManager {
 
     override fun loadConfig(): Config = Config(File(Parties.INSTANCE.dataFolder, "config.yml"), Parties.INSTANCE)
 
-    override fun loadParties(): PartyManager = Json.decodeFromString<PartyManager>(
-        Files.readAllLines(
-            File(
-                Parties.INSTANCE.dataFolder,
-                "parties.json"
-            ).toPath()
-        ).joinToString()
-    )
+    override fun loadParties(): PartyManager {
+        val file = File(
+            Parties.INSTANCE.dataFolder,
+            "parties.json"
+        )
+        return if(file.exists()){
+            Json.decodeFromString<PartyManager>(
+                Files.readAllLines(
+                    file.toPath()
+                ).joinToString())
+        }else{
+            PartyManagerImp()
+        }
+
+    }
 
     override fun saveParties(partyManager: PartyManager) {
         Files.writeString(
