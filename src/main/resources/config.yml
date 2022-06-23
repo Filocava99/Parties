@@ -14,79 +14,79 @@ always_on_friendly_fire_worlds:
 ############
 
 #Max players per party message
-party_limit_reached: "&cIl limite del party e' stato raggiunto!"
+party_limit_reached: "&cParty limit reached!"
 
 #invite-message
-invite_message: "&eHai invitato %player% al tuo party!"
+invite_message: "&eYou invited %player% to your party!"
 
 #invite-received-message
-invite_received_message: "&eHai ricevuto l'invito ad entrare nel party di %player%! Digita\n/party accept per accettare\n/party decline per rifiutare"
+invite_received_message: "&eYou have been invited to a party from %player%! Run\n/party accept to accept the offer\n/party decline to decline the offer"
 
 #invite-refused
-invite_refused: "&eHai rifiutato l'invito al party di %player%!"
+invite_refused: "&eYou have declined the party offer from %player%!"
 
 #declined-party-notification
-decline_party_notification: "&e%player% ha rifiutato l'invito al party!"
+decline_party_notification: "&e%player% declined the party invitation!"
 
 #disband-message
-disband_message: "&cIl party di %player% e' stato cancellato!"
+disband_message: "&c%player%'s has been disbanded!"
 
 #invite-accepted
-invite_accepted: "&aSei entrato nel party di %player%!"
+invite_accepted: "&aYou joined %player%'s party!"
 
 #accept-party-notification
-accept_party_notification: "&a%player% e' entrato nel party!"
+accept_party_notification: "&a%player% joined your party!"
 
 #player-left-party
-player_left_party: "&c%player% e' uscito dal party!"
+player_left_party: "&c%player% left your party!"
 
 #player-left
-player_left: "&eSei uscito dal party!"
+player_left: "&eYou left the party!"
 
 #not-leader
-not_leader: "&cNon sei ne il leader del party ne Tigierrei!"
+not_leader: "&cYou are not the party leader!"
 
 #not-on-party
-not_on_party: "&cNon sei in nessun party!"
+not_on_party: "&cYou are not in any party!"
 
 #cannot-invite-yourself
-cannot_invite_yourself: "&cNon puoi auto invitarti!"
+cannot_invite_yourself: "&cYou can't invite yourself!"
 
 #no-invite-to-accept
-no_invites: "&cNon hai nessun invito in sospeso!"
+no_invites: "&cYou haven't any pending invitation!"
 
 #already-in-party
-already_in_party: "&cSei gia' in un party!"
+already_in_party: "&cYou are already in party!"
 
 #player-already-in-party
-player_already_in_party: "&c%player% e' già in un party!"
+player_already_in_party: "&c%player% is already in a party!"
 
 #error-message
-error_message: "&cNon sei in un party oppure non sei il party leader!"
+error_message: "&cYou are not in party or you are not the party leader!"
 
 #insufficient-parameters
-insufficient_parameters: "&cParametri insufficienti!"
+insufficient_parameters: "&cInsufficient parameters!"
 
 #wrong-password
-wrong_password: "&cPassword sbagliata!"
+wrong_password: "&cWrong password!"
 
 #password-changed
-password_changed: "&aPassword modificata!"
+password_changed: "&aPassword changed!"
 
 #invalid-party
-invalid_party: "&cIl party a cui stai tentando di accedere non esiste piu'!"
+invalid_party: "&cThe party you are trying to join no longer exists!"
 
 #party-created
-party_created: "&aParty creato con successo!"
+party_created: "&aSuccessfully created the party!"
 
 #party-leader-left
-party_leader_left: "&cSei il leader del party, non puoi uscire! Usa /party disband per cancellare il party!"
+party_leader_left: "&cYou are the party leader, you cannot leave! Use /party disband to disband the party!"
 
 #player_not_in_party
-player_not_in_party: "&c%player% non e' nel tuo party!"
+player_not_in_party: "&c%player% is no longer in your party!"
 
 #player_kicked
-player_kicked: "&e%player% e' stato rimosso dal party!"
+player_kicked: "&e%player% has been kicked from the party!"
 
 #kicked
-kicked: "&cSei stato rimosso dal party!"
+kicked: "&cYou have been kicked from the party!"
