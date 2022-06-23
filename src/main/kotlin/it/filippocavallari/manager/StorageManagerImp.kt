@@ -3,7 +3,7 @@ package it.filippocavallari.manager
 import it.filippocavallari.Parties
 import it.filippocavallari.api.PartyManager
 import it.filippocavallari.api.StorageManager
-import it.tigierrei.configapi.Config
+import it.filippocavallari.configapi.Config
 import java.io.*
 
 class StorageManagerImp : StorageManager {

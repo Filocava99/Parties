@@ -1,6 +1,6 @@
 package it.filippocavallari.api
 
-import it.tigierrei.configapi.Config
+import it.filippocavallari.configapi.Config
 
 interface StorageManager {
 

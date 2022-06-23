@@ -11,7 +11,7 @@ import it.filippocavallari.command.party.*
 import it.filippocavallari.listener.PlayerListener
 import it.filippocavallari.manager.ChatManagerImp
 import it.filippocavallari.manager.StorageManagerImp
-import it.tigierrei.configapi.Config
+import it.filippocavallari.configapi.Config
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandExecutor
 import org.bukkit.plugin.java.JavaPlugin
