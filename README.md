@@ -1,3 +1,5 @@
+[![Build status badge](https://raw.githubusercontent.com/Filocava99/Buildy/master/builds/Parties/Parties-build.svg)](https://filocava99.github.io/Buildy/builds/Parties/Parties.html)
+
 # Parties
 A lightweight Spigot plugin for managing parties.
 
