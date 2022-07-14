@@ -9,6 +9,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.PotionSplashEvent
 import org.bukkit.event.player.AsyncPlayerChatEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.potion.PotionEffectType
 
 class PlayerListener : Listener {
@@ -58,28 +59,35 @@ class PlayerListener : Listener {
     @EventHandler
     fun onPotionSplash(event: PotionSplashEvent) {
         if (event.entity.effects.stream().map { it -> it.type }
-                .anyMatch { potionEffect -> potionEffect === PotionEffectType.BLINDNESS || potionEffect === PotionEffectType.HARM || potionEffect === PotionEffectType.POISON || potionEffect === PotionEffectType.SLOW }){
-            if(event.entity.shooter is Player){
+                .anyMatch { potionEffect -> potionEffect === PotionEffectType.BLINDNESS || potionEffect === PotionEffectType.HARM || potionEffect === PotionEffectType.POISON || potionEffect === PotionEffectType.SLOW }) {
+            if (event.entity.shooter is Player) {
                 val shooter = event.entity.shooter as Player
                 val affectedEntities = event.affectedEntities
                 affectedEntities.forEach { livingEntity ->
-                    run{
-                        if(livingEntity is Player){
+                    run {
+                        if (livingEntity is Player) {
                             val damaged = livingEntity as Player
-                            if(Parties.INSTANCE.config.config.getStringList("always_on_friendly_fire_worlds").contains(damaged.location.world?.name)){
+                            if (Parties.INSTANCE.config.config.getStringList("always_on_friendly_fire_worlds")
+                                    .contains(damaged.location.world?.name)
+                            ) {
                                 return;
                             }
-                            if(Parties.INSTANCE.partyManager.arePlayersInSameParty(shooter.uniqueId, damaged.uniqueId)){
+                            if (Parties.INSTANCE.partyManager.arePlayersInSameParty(
+                                    shooter.uniqueId,
+                                    damaged.uniqueId
+                                )
+                            ) {
                                 affectedEntities.remove(livingEntity)
                             }
                         }
                     }
-                 }
-                try{
+                }
+                try {
                     val affectedEntitiesField = event::class.java.getDeclaredField("affectedEntities")
                     affectedEntitiesField.isAccessible = true
                     affectedEntitiesField.set(event, affectedEntities)
-                }catch (ignored: Exception){ }
+                } catch (ignored: Exception) {
+                }
             }
         }
     }
@@ -96,7 +104,7 @@ class PlayerListener : Listener {
                 partyManager.getPlayerParty(player.uniqueId)?.let {
                     chatManager.sendMessageToPartyMembers(
                         it.leader,
-                    "&2[PARTY] &a" + player.name + ": " + message
+                        "&2[PARTY] &a" + player.name + ": " + message
                     )
                 }
             }
@@ -110,4 +118,21 @@ class PlayerListener : Listener {
 //        }
 //    }
 
+    @EventHandler
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        if (Parties.INSTANCE.config.config.getBoolean("auto_leave_party_on_quit")) {
+            val player = event.player
+            val partyManager = Parties.INSTANCE.partyManager
+            if (partyManager.isPlayerInParty(player.uniqueId)) {
+                val party = partyManager.getPlayerParty(player.uniqueId)
+                party?.let {
+                    if (party.leader == player.uniqueId) {
+                        partyManager.deleteParty(party.leader)
+                    } else {
+                        partyManager.removePlayerFromParty(player.uniqueId, party.leader)
+                    }
+                }
+            }
+        }
+    }
 }

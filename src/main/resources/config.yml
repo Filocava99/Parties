@@ -9,6 +9,9 @@ party_limit: 50
 always_on_friendly_fire_worlds:
   - world-default
 
+#Auto-leave party on quit
+auto_leave_party_on_quit: false
+
 ############
 # MESSAGES #
 ############
